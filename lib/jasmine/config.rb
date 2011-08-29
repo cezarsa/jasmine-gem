@@ -69,8 +69,12 @@ module Jasmine
       negative, positive = patterns.partition {|pattern| /^!/ =~ pattern}
       chosen, negated = [positive, negative].collect do |patterns|
         patterns.collect do |pattern|
-          matches = Dir.glob(File.join(dir, pattern.gsub(/^!/,'')))
-          matches.collect {|f| f.sub("#{dir}/", "")}.sort
+          if pattern =~ /^http/
+            pattern
+          else
+            matches = Dir.glob(File.join(dir, pattern.gsub(/^!/, '')))
+            matches.collect {|f| f.sub("#{dir}/", "")}.sort
+          end
         end.flatten.uniq
       end
       chosen - negated
@@ -92,7 +96,9 @@ module Jasmine
 
     def js_files(spec_filter = nil)
       spec_files_to_include = spec_filter.nil? ? spec_files : match_files(spec_dir, [spec_filter])
-      src_files.collect {|f| "/" + f } + helpers.collect {|f| File.join(spec_path, f) } + spec_files_to_include.collect {|f| File.join(spec_path, f) }
+      [ src_files.collect { |f| f =~ /^http/ ? f : "/" + f },
+        helpers.collect { |f| File.join(spec_path, f) },
+        spec_files_to_include.collect { |f| File.join(spec_path, f) } ].flatten
     end
 
     def css_files
