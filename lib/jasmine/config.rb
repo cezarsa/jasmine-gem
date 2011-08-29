@@ -158,5 +158,14 @@ module Jasmine
         []
       end
     end
+
+    def html_fragments
+      files = if simple_config['html_fragments']
+        match_files(spec_dir, simple_config['html_fragments'])
+      else
+        match_files(spec_dir, ["**/*[sS]pec.html"])
+      end
+      files.map { |f| File.read(File.join(spec_dir, f)) rescue nil }.compact
+    end
   end
 end

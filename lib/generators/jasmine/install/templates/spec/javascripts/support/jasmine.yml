@@ -58,6 +58,19 @@ helpers:
 spec_files:
   - '**/*[sS]pec.js'
 
+# html_fragments
+#
+# Return an array of filepaths relative to spec_dir to include.
+# Default: ["**/*[sS]pec.html"]
+#
+# EXAMPLE:
+#
+# spec_files:
+#   - **/*[sS]pec.html
+#
+html_fragments:
+  - '**/*[sS]pec.html'
+
 # src_dir
 #
 # Source directory path. Your src_files must be returned relative to this path. Will use root if left blank.
